@@ -1,10 +1,13 @@
 <script setup>
 import {ref} from 'vue'
 import {useStore} from 'vuex'
+import {useRouter} from "vue-router";
 
 const username = ref('')
 const password = ref('')
 const store = useStore()
+const router = useRouter()
+
 const handleLogin = async () => {
   console.log(`Username: ${username.value}\nPassword: ${password.value}`)
   const online = await store.dispatch('login', {
@@ -13,6 +16,7 @@ const handleLogin = async () => {
   })
   if (online) {
     console.log("登录成功")
+    await router.push('/chat')
   } else {
     console.log("登录失败")
   }

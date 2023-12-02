@@ -39,6 +39,7 @@ export default createStore({
                         commit('setLogin', username)
                         return true
                     } else {
+                        alert("用户名或密码错误")
                         return false
                     }
                 })
