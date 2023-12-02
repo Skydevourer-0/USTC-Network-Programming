@@ -31,17 +31,20 @@ export default createStore({
     },
     actions: {
         login({commit}, {username, password}) {
-            fetch('/userList.json')
+            return fetch('/userList.json')
                 .then(response => response.json())
                 .then(userList => {
                     let exists = userList.some(user => user.username === username && user.password === password)
                     if (exists) {
                         commit('setLogin', username)
+                        return true
                     } else {
-                        alert('用户名或密码错误')
+                        return false
                     }
-                }, error => {
-                    console.log(error)
+                })
+                .catch(err=>{
+                    console.log(err)
+                    return false
                 })
         },
     },
