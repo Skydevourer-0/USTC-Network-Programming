@@ -1,0 +1,57 @@
+<script setup>
+import {ref} from 'vue'
+import {useStore} from 'vuex'
+
+const username = ref('')
+const password = ref('')
+const store = useStore()
+const handleLogin = async () => {
+  console.log(`Username: ${username.value}\nPassword: ${password.value}`)
+  const online = await store.dispatch('login', {
+    username: username.value,
+    password: password.value
+  })
+  if (online) {
+    console.log("登录成功")
+  } else {
+    console.log("登录失败")
+  }
+}
+</script>
+
+<template>
+  <div class="login-container">
+    <img src="/logo.png" alt="Logo" class="logo"/>
+    <h2>登录</h2>
+    <form @submit.prevent="handleLogin">
+      <input type="text" v-model="username" placeholder="Username" required/>
+      <input type="password" v-model="password" placeholder="Password" required/>
+      <button type="submit">登录</button>
+    </form>
+  </div>
+</template>
+
+<style scoped>
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+}
+
+.login-container form {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.login-container form input {
+  margin: 5px;
+}
+
+.login-container form button {
+  margin:5px;
+}
+</style>
