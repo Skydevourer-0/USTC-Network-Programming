@@ -53,9 +53,12 @@ const handleLogin = async () => {
 
 .login-container form input {
   margin: 5px;
+  padding: 5px;
+  font-size:14px;
 }
 
 .login-container form button {
   margin:5px;
+  font-size: 14px;
 }
 </style>
