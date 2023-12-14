@@ -6,6 +6,7 @@ export default createStore({
         online: false,
         username: '',
         messageList: [],
+        messageBuffer: []
     },
     mutations: {
         setLogin(state, username) {
@@ -15,8 +16,12 @@ export default createStore({
         setMessageList(state, messageList) {
             state.messageList = messageList
         },
+        setMessageBuffer(state, messageBuffer) {
+            state.messageBuffer = messageBuffer
+        },
         addMessage(state, message) {
-            state.messageList.push(message)
+            state.messageList.push(message);
+            state.messageBuffer.push(message);
         }
     },
     getters: {
@@ -28,6 +33,9 @@ export default createStore({
         },
         getMessageList(state) {
             return state.messageList
+        },
+        getMessageBuffer(state) {
+            return state.messageBuffer
         }
     },
     actions: {
@@ -82,11 +90,12 @@ export default createStore({
                     console.error('Login error: ', err);
                 });
         },
-        async saveMessages({getters}) {
-            const messages = getters.getMessageList;
+        async saveMessages({commit},{getters}) {
+            const messages = getters.getMessageBuffer;
             await axios.post('/api/messages/save-messages', messages)
                 .then(res => {
                     if (res.status === 200) {
+                        commit('setMessageBuffer',[]);
                         return true;
                     } else {
                         alert('服务器出错，请联系工作人员');
