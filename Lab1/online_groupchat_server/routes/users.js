@@ -6,8 +6,8 @@ const router = express.Router();
 // 用户注册
 router.post('/signup', (req, res) => {
     const {username, password} = req.body;
-    const path = '/userList.json';
-    fs.readFile(path, 'utf8', (err, data) => {
+    const file = path.join(__dirname, '..', 'public', 'userList.json');
+    fs.readFile(file, 'utf8', (err, data) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Error reading file...');
@@ -18,7 +18,7 @@ router.post('/signup', (req, res) => {
             return res.status(400).send('Username already exists...');
         } else {
             userList.push({username, password});
-            fs.writeFile(path, JSON.stringify(userList, null, 2), err => {
+            fs.writeFile(file, JSON.stringify(userList, null, 2), err => {
                 if (err) {
                     console.error(err);
                     return res.status(500).send('Error writing file...');
