@@ -7,16 +7,18 @@ const store = useStore()
 const messageContent = ref('')
 const messages = store.getters.getMessageList
 
-onMounted(()=>{
-  if(!store.getters.getOnline){
+onMounted(() => {
+  if (!store.getters.getOnline) {
     useRouter().push('/')
   }
 })
 
 const handleSend = () => {
+  const dateTime = new Date();
   let message = {
     username: store.getters.getUsername,
-    time: new Date().toLocaleString(),
+    date: dateTime.toLocaleDateString(),
+    time: dateTime.toLocaleTimeString(),
     content: messageContent.value
   }
   store.commit('addMessage', message)
@@ -32,6 +34,7 @@ const handleSend = () => {
         <div class="message-header">
           <img src="/favicon.ico" alt="icon"/>
           <span class="username">{{ message.username }}</span>
+          <span class="time">{{ message.date }}</span>
           <span class="time">{{ message.time }}</span>
         </div>
         <div class="message-content">{{ message.content }}</div>
@@ -83,6 +86,7 @@ const handleSend = () => {
   display: flex;
   align-items: center;
   padding: 5px 10px;
+  margin: 0 5px;
   border-radius: 10px;
   background: #dcedf5;
 }
@@ -90,7 +94,7 @@ const handleSend = () => {
 .time {
   display: flex;
   align-items: center;
-  padding: 5px 10px;
+  padding: 5px 5px;
 }
 
 .message-content {
