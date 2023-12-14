@@ -45,13 +45,10 @@ export default createStore({
                     console.log(res);
                     if (res.status === 200) {
                         alert('注册成功');
-                        return true;
                     } else if (res.status === 400) {
                         alert('用户名已存在');
-                        return false;
                     } else {
                         alert('服务器出错，请联系工作人员');
-                        return false;
                     }
                 })
                 .catch(err => {
@@ -64,13 +61,10 @@ export default createStore({
                     console.log(res);
                     if (res.status === 200) {
                         commit('setLogin', username);
-                        return true;
                     } else if (res.status === 400) {
                         alert('用户名或密码错误');
-                        return false;
                     } else {
                         alert('服务器出错，请联系工作人员');
-                        return false;
                     }
                 })
                 .catch(err => {
@@ -78,15 +72,13 @@ export default createStore({
                 });
         },
         async loadMessages({commit}, date) {
-            await axios.get('http://localhost:3000/api/messages/load-messages', date)
+            await axios.post('http://localhost:3000/api/messages/load-messages', {date})
                 .then(res => {
                     console.log(res);
                     if (res.status === 200) {
                         commit('setMessageList', res.data);
-                        return true;
                     } else {
                         alert('服务器出错，请联系工作人员');
-                        return false;
                     }
                 })
                 .catch(err => {
@@ -100,10 +92,8 @@ export default createStore({
                     console.log(res);
                     if (res.status === 200) {
                         commit('setMessageBuffer',[]);
-                        return true;
                     } else {
                         alert('服务器出错，请联系工作人员');
-                        return false;
                     }
                 })
                 .catch(err => {
