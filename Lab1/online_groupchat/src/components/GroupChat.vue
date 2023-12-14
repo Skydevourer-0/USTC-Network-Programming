@@ -5,7 +5,6 @@ import {useRouter} from "vue-router";
 
 const store = useStore()
 const messageContent = ref('')
-const messages = store.getters.getMessageList
 
 onMounted(async () => {
   if (!store.getters.getOnline) {
@@ -13,6 +12,8 @@ onMounted(async () => {
   } else {
     const date = new Date().toLocaleDateString();
     await store.dispatch('loadMessages', date);
+    const messages = document.getElementsByClassName("messages")[0];
+    messages.scrollTop = messages.scrollHeight;
   }
 });
 
@@ -35,6 +36,8 @@ const handleSend = () => {
   }
   store.commit('addMessage', message)
   messageContent.value = ''
+  const messages = document.getElementsByClassName("messages")[0];
+  messages.scrollTop = messages.scrollHeight;
 }
 
 </script>
@@ -42,7 +45,7 @@ const handleSend = () => {
 <template>
   <div class="container">
     <div class="messages">
-      <div class="message" v-for="message in messages" :key="message.id">
+      <div class="message" v-for="message in store.getters.getMessageList" :key="message.id">
         <div class="message-header">
           <img src="/favicon.ico" alt="icon"/>
           <span class="username">{{ message.username }}</span>

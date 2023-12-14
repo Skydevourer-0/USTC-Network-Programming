@@ -2,5 +2,9 @@
   {
     "username": "sky",
     "password": "12345678"
+  },
+  {
+    "username": "user",
+    "password": "password"
   }
 ]

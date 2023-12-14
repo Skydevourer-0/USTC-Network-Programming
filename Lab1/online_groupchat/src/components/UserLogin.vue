@@ -10,10 +10,11 @@ const router = useRouter()
 
 const handleLogin = async () => {
   console.log(`Username: ${username.value}\nPassword: ${password.value}`)
-  const online = await store.dispatch('login', {
+  await store.dispatch('login', {
     username: username.value,
     password: password.value
-  })
+  });
+  const online = store.getters.getOnline;
   if (online) {
     console.log("登录成功")
     await router.push('/chat')
@@ -24,15 +25,10 @@ const handleLogin = async () => {
 
 const handleSignUp = async () => {
   console.log(`Username: ${username.value}\nPassword: ${password.value}`);
-  const success = await store.dispatch('singUp', {
+  await store.dispatch('singUp', {
     username: username.value,
     password: password.value
   });
-  if (success) {
-    alert("注册成功");
-  } else {
-    alert("注册失败");
-  }
 }
 </script>
 
