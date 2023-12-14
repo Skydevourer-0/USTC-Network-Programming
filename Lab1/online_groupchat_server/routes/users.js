@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs');
+const path = require('path');
 const router = express.Router();
 
 // 用户注册
@@ -31,8 +32,8 @@ router.post('/signup', (req, res) => {
 // 用户登录
 router.post('/login', (req, res) => {
     const {username, password} = req.body;
-    const path = '/userList.json';
-    fs.readFile(path, 'utf8', (err, data) => {
+    const file = path.join(__dirname, '..', 'public', 'userList.json');
+    fs.readFile(file, 'utf8', (err, data) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Error reading file...');
@@ -47,4 +48,4 @@ router.post('/login', (req, res) => {
     });
 });
 
-export default router;
+module.exports = router;

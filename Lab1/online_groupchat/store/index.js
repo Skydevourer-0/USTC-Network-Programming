@@ -40,8 +40,9 @@ export default createStore({
     },
     actions: {
         async singUp(_, {username, password}) {
-            await axios.post('/api/users/signup', {username, password})
+            await axios.post('http://localhost:3000/api/users/signup', {username, password})
                 .then(res => {
+                    console.log(res);
                     if (res.status === 200) {
                         alert('注册成功');
                         return true;
@@ -58,8 +59,9 @@ export default createStore({
                 })
         },
         async login({commit}, {username, password}) {
-            await axios.post('/api/users/login', {username, password})
+            await axios.post('http://localhost:3000/api/users/login', {username, password})
                 .then(res => {
+                    console.log(res);
                     if (res.status === 200) {
                         commit('setLogin', username);
                         return true;
@@ -76,8 +78,9 @@ export default createStore({
                 });
         },
         async loadMessages({commit}, date) {
-            await axios.get('/api/messages/load-messages', date)
+            await axios.get('http://localhost:3000/api/messages/load-messages', date)
                 .then(res => {
+                    console.log(res);
                     if (res.status === 200) {
                         commit('setMessageList', res.data);
                         return true;
@@ -90,10 +93,11 @@ export default createStore({
                     console.error('Login error: ', err);
                 });
         },
-        async saveMessages({commit},{getters}) {
+        async saveMessages({commit,getters}) {
             const messages = getters.getMessageBuffer;
-            await axios.post('/api/messages/save-messages', messages)
+            await axios.post('http://localhost:3000/api/messages/save-messages', messages)
                 .then(res => {
+                    console.log(res);
                     if (res.status === 200) {
                         commit('setMessageBuffer',[]);
                         return true;

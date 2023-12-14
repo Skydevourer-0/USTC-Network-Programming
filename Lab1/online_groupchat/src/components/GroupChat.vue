@@ -1,5 +1,5 @@
 <script setup>
-import {ref, onMounted} from 'vue'
+import {ref, onMounted, watch} from 'vue'
 import {useStore} from 'vuex'
 import {useRouter} from "vue-router";
 
@@ -7,11 +7,23 @@ const store = useStore()
 const messageContent = ref('')
 const messages = store.getters.getMessageList
 
-onMounted(() => {
+onMounted(async () => {
   if (!store.getters.getOnline) {
-    useRouter().push('/')
+    await useRouter().push('/')
+  } else {
+    const date = new Date().toLocaleDateString();
+    await store.dispatch('loadMessages', date);
   }
-})
+});
+
+watch(
+    () => store.getters.getMessageBuffer.length,
+    async (length) => {
+      const threshold = 10;
+      if (length > threshold) {
+        await store.dispatch('saveMessages');
+      }
+    });
 
 const handleSend = () => {
   const dateTime = new Date();

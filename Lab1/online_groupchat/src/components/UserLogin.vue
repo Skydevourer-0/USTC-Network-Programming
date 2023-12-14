@@ -21,6 +21,19 @@ const handleLogin = async () => {
     console.log("登录失败")
   }
 }
+
+const handleSignUp = async () => {
+  console.log(`Username: ${username.value}\nPassword: ${password.value}`);
+  const success = await store.dispatch('singUp', {
+    username: username.value,
+    password: password.value
+  });
+  if (success) {
+    alert("注册成功");
+  } else {
+    alert("注册失败");
+  }
+}
 </script>
 
 <template>
@@ -31,6 +44,7 @@ const handleLogin = async () => {
       <input type="text" v-model="username" placeholder="Username" required/>
       <input type="password" v-model="password" placeholder="Password" required/>
       <button type="submit">登录</button>
+      <button type="button" @click="handleSignUp">注册</button>
     </form>
   </div>
 </template>
@@ -54,11 +68,11 @@ const handleLogin = async () => {
 .login-container form input {
   margin: 5px;
   padding: 5px;
-  font-size:14px;
+  font-size: 14px;
 }
 
 .login-container form button {
-  margin:5px;
+  margin: 5px;
   font-size: 14px;
 }
 </style>

@@ -38,4 +38,4 @@ router.post('/save-messages', (req, res) => {
     });
 });
 
-export default router;
+module.exports = router;
