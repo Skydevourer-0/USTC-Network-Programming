@@ -13,6 +13,10 @@ export default createStore({
             state.online = true
             state.username = username
         },
+        setLogout(state) {
+            state.online = false
+            state.username = ''
+        },
         setMessageList(state, messageList) {
             state.messageList = messageList
         },
@@ -68,10 +72,23 @@ export default createStore({
                 } else {
                     alert('服务器出错，请联系工作人员');
                 }
+            }).catch(err => {
+                console.error('Login error: ', err);
+            });
+        },
+        async logout({commit}) {
+            await axios.get('http://localhost:3000/api/users/logout',
+                {withCredentials: true}
+            ).then(res => {
+                console.log(res);
+                if (res.status === 200) {
+                    commit('setLogout');
+                } else {
+                    alert('服务器出错，请联系工作人员');
+                }
+            }).catch(err => {
+                console.error('Login error: ', err);
             })
-                .catch(err => {
-                    console.error('Login error: ', err);
-                });
         },
         async checkSession({commit}) {
             await axios.get('http://localhost:3000/api/users/check_session',

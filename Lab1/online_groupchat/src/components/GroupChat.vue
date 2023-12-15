@@ -4,12 +4,13 @@ import {useStore} from 'vuex'
 import {useRouter} from "vue-router";
 
 const store = useStore()
+const router = useRouter()
 const messageContent = ref('')
 
 onMounted(async () => {
   await store.dispatch('checkSession');
   if (!store.getters.getOnline) {
-    await useRouter().push('/')
+    await router.push('/')
   } else {
     const date = new Date().toLocaleDateString();
     await store.dispatch('loadMessages', date);
@@ -21,8 +22,8 @@ onMounted(async () => {
 watch(
     () => store.getters.getMessageBuffer.length,
     async (length) => {
-      const threshold = 10;
-      if (length > threshold) {
+      const threshold = 1;
+      if (length >= threshold) {
         await store.dispatch('saveMessages');
       }
     });
@@ -41,10 +42,19 @@ const handleSend = () => {
   messages.scrollTop = messages.scrollHeight;
 }
 
+const handleLogout = async () => {
+  await store.dispatch('logout');
+  await store.dispatch('saveMessages');
+  await router.push('/');
+}
+
 </script>
 
 <template>
   <div class="container">
+    <div class="logout">
+      <button type="button" @click="handleLogout">退出</button>
+    </div>
     <div class="messages">
       <div class="message" v-for="message in store.getters.getMessageList" :key="message.id">
         <div class="message-header">
@@ -73,6 +83,12 @@ const handleSend = () => {
   padding: 20px;
   justify-content: center;
   align-items: center;
+}
+
+.logout button {
+  font-size: 14px;
+  margin: 5px;
+  padding: 5px;
 }
 
 .messages {

@@ -50,6 +50,19 @@ router.post('/login', (req, res) => {
     });
 });
 
+// 用户登出
+router.get('/logout', (req, res) => {
+    // 登出后，将 session 销毁
+    req.session.destroy(err => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send('Error in logout...');
+        }
+        res.clearCookie('SESSION_ID', {path: '/'});
+        res.status(200).send('Logout success...');
+    });
+});
+
 // 检查 session
 router.get('/check_session', (req, res) => {
     if (req.session.username) {
