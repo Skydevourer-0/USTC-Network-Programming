@@ -1,6 +1,6 @@
 *.iml
 .idea
-online_gourpchat/.idea
-online_gourpchat/node_modules
-online_gourpchat_server/.idea
-online_gourpchat_server/node_modules
+/online_groupchat/.idea/
+/online_groupchat/node_modules/
+/online_groupchat_server/.idea/
+/online_groupchat_server/node_modules/
