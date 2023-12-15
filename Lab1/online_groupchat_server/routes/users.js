@@ -41,11 +41,22 @@ router.post('/login', (req, res) => {
         const userList = JSON.parse(data);
         const exists = userList.some(user => user.username === username && user.password === password);
         if (exists) {
-            return res.status(200).send('Login success...');
+            // 登录成功后，将用户名存入 session
+            req.session.username = username;
+            res.status(200).send('Login success...');
         } else {
-            return res.status(400).send('Username or password error...');
+            res.status(400).send('Username or password error...');
         }
     });
+});
+
+// 检查 session
+router.get('/check_session', (req, res) => {
+    if (req.session.username) {
+        return res.status(200).send(req.session.username);
+    } else {
+        return res.status(400).send('No session...');
+    }
 });
 
 module.exports = router;

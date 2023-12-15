@@ -7,6 +7,7 @@ const store = useStore()
 const messageContent = ref('')
 
 onMounted(async () => {
+  await store.dispatch('checkSession');
   if (!store.getters.getOnline) {
     await useRouter().push('/')
   } else {

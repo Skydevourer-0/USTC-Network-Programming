@@ -56,17 +56,34 @@ export default createStore({
                 })
         },
         async login({commit}, {username, password}) {
-            await axios.post('http://localhost:3000/api/users/login', {username, password})
-                .then(res => {
-                    console.log(res);
-                    if (res.status === 200) {
-                        commit('setLogin', username);
-                    } else if (res.status === 400) {
-                        alert('用户名或密码错误');
-                    } else {
-                        alert('服务器出错，请联系工作人员');
-                    }
-                })
+            await axios.post('http://localhost:3000/api/users/login',
+                {username, password},
+                {withCredentials: true}
+            ).then(res => {
+                console.log(res);
+                if (res.status === 200) {
+                    commit('setLogin', username);
+                } else if (res.status === 400) {
+                    alert('用户名或密码错误');
+                } else {
+                    alert('服务器出错，请联系工作人员');
+                }
+            })
+                .catch(err => {
+                    console.error('Login error: ', err);
+                });
+        },
+        async checkSession({commit}) {
+            await axios.get('http://localhost:3000/api/users/check_session',
+                {withCredentials: true}
+            ).then(res => {
+                console.log(res);
+                if (res.status === 200) {
+                    commit('setLogin', res.data);
+                } else {
+                    alert('Session not exists')
+                }
+            })
                 .catch(err => {
                     console.error('Login error: ', err);
                 });
@@ -85,13 +102,13 @@ export default createStore({
                     console.error('Login error: ', err);
                 });
         },
-        async saveMessages({commit,getters}) {
+        async saveMessages({commit, getters}) {
             const messages = getters.getMessageBuffer;
             await axios.post('http://localhost:3000/api/messages/save-messages', messages)
                 .then(res => {
                     console.log(res);
                     if (res.status === 200) {
-                        commit('setMessageBuffer',[]);
+                        commit('setMessageBuffer', []);
                     } else {
                         alert('服务器出错，请联系工作人员');
                     }
