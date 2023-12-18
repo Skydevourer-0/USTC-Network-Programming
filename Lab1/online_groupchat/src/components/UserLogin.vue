@@ -37,10 +37,10 @@ const handleSignUp = async () => {
     <img src="/logo.png" alt="Logo" class="logo"/>
     <h2>登录</h2>
     <form @submit.prevent="handleLogin">
-      <input type="text" v-model="username" placeholder="Username" required/>
-      <input type="password" v-model="password" placeholder="Password" required/>
-      <button type="submit">登录</button>
-      <button type="button" @click="handleSignUp">注册</button>
+      <input id="username" type="text" v-model="username" placeholder="Username" required/>
+      <input id="password" type="password" v-model="password" placeholder="Password" required/>
+      <button id="login-button" type="submit">登录</button>
+      <button id="signup-button" type="button" @click="handleSignUp">注册</button>
     </form>
   </div>
 </template>
