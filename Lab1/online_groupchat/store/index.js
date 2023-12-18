@@ -49,13 +49,14 @@ export default createStore({
                     console.log(res);
                     if (res.status === 200) {
                         alert('注册成功');
-                    } else if (res.status === 400) {
+                    }
+                })
+                .catch(err => {
+                    if (err.response && err.response.status === 400) {
                         alert('用户名已存在');
                     } else {
                         alert('服务器出错，请联系工作人员');
                     }
-                })
-                .catch(err => {
                     console.error('Login error: ', err);
                 })
         },
@@ -67,12 +68,13 @@ export default createStore({
                 console.log(res);
                 if (res.status === 200) {
                     commit('setLogin', username);
-                } else if (res.status === 400) {
+                }
+            }).catch(err => {
+                if (err.response && err.response.status === 400) {
                     alert('用户名或密码错误');
                 } else {
                     alert('服务器出错，请联系工作人员');
                 }
-            }).catch(err => {
                 console.error('Login error: ', err);
             });
         },
@@ -83,10 +85,9 @@ export default createStore({
                 console.log(res);
                 if (res.status === 200) {
                     commit('setLogout');
-                } else {
-                    alert('服务器出错，请联系工作人员');
                 }
             }).catch(err => {
+                alert('服务器出错，请联系工作人员');
                 console.error('Login error: ', err);
             })
         },
@@ -98,7 +99,7 @@ export default createStore({
                 if (res.status === 200) {
                     commit('setLogin', res.data);
                 } else {
-                    alert('Session not exists')
+                    console.log('Session not exists');
                 }
             })
                 .catch(err => {
@@ -111,11 +112,10 @@ export default createStore({
                     console.log(res);
                     if (res.status === 200) {
                         commit('setMessageList', res.data);
-                    } else {
-                        alert('服务器出错，请联系工作人员');
                     }
                 })
                 .catch(err => {
+                    alert('服务器出错，请联系工作人员');
                     console.error('Login error: ', err);
                 });
         },
@@ -126,11 +126,10 @@ export default createStore({
                     console.log(res);
                     if (res.status === 200) {
                         commit('setMessageBuffer', []);
-                    } else {
-                        alert('服务器出错，请联系工作人员');
                     }
                 })
                 .catch(err => {
+                    alert('服务器出错，请联系工作人员');
                     console.error('Login error: ', err);
                 });
         }
