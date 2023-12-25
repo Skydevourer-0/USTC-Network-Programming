@@ -39,4 +39,17 @@ router.post('/save-messages', (req, res) => {
     });
 });
 
+router.get('/dates', (req, res) => {
+    const file = path.join(__dirname, '..', 'public', 'messageList.json');
+    fs.readFile(file, 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send('Error reading file...');
+        }
+        const messageList = JSON.parse(data);
+        const uniqueDates = [...new Set(messageList.map(message => message.date))];
+        return res.status(200).send(uniqueDates);
+    });
+});
+
 module.exports = router;

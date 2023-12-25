@@ -6,12 +6,16 @@ import {useRouter} from "vue-router";
 const store = useStore()
 const router = useRouter()
 const messageContent = ref('')
+const showDates = ref(false)
+const dates = ref([])
 
 onMounted(async () => {
   await store.dispatch('checkSession');
   if (!store.getters.getOnline) {
     await router.push('/')
   } else {
+    await store.dispatch('getDates');
+    dates.value = store.getters.getDates;
     const date = new Date().toLocaleDateString();
     await store.dispatch('loadMessages', date);
     const messages = document.getElementsByClassName("messages")[0];
@@ -48,12 +52,36 @@ const handleLogout = async () => {
   await router.push('/');
 }
 
+const handleShowDates = async () => {
+  showDates.value = !showDates.value;
+  if (showDates.value === false) {
+    const date = new Date().toLocaleDateString();
+    await store.dispatch('loadMessages', date);
+    const messages = document.getElementsByClassName("messages")[0];
+    messages.scrollTop = messages.scrollHeight;
+  }
+}
+
+const handleHistory = async (event) => {
+  const date = event.target.value;
+  await store.dispatch('loadMessages', date);
+  const messages = document.getElementsByClassName("messages")[0];
+  messages.scrollTop = messages.scrollHeight;
+}
+
 </script>
 
 <template>
   <div class="container">
-    <div class="logout">
+    <div class="menu">
+      <button type="button" @click="handleShowDates">历史</button>
       <button type="button" @click="handleLogout">退出</button>
+    </div>
+    <div class="dates">
+      <select v-if="showDates" @change="handleHistory">
+        <option value="">选择一个日期</option>
+        <option v-for="date in dates" :key="date">{{ date }}</option>
+      </select>
     </div>
     <div class="messages">
       <div class="message" v-for="message in store.getters.getMessageList" :key="message.id">
@@ -85,7 +113,15 @@ const handleLogout = async () => {
   align-items: center;
 }
 
-.logout button {
+.dates select {
+  padding: 5px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
+
+.menu button {
   font-size: 14px;
   margin: 5px;
   padding: 5px;

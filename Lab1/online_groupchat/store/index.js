@@ -6,7 +6,8 @@ export default createStore({
         online: false,
         username: '',
         messageList: [],
-        messageBuffer: []
+        messageBuffer: [],
+        dates: []
     },
     mutations: {
         setLogin(state, username) {
@@ -26,6 +27,9 @@ export default createStore({
         addMessage(state, message) {
             state.messageList.push(message);
             state.messageBuffer.push(message);
+        },
+        setDates(state, dates) {
+            state.dates = dates;
         }
     },
     getters: {
@@ -40,6 +44,9 @@ export default createStore({
         },
         getMessageBuffer(state) {
             return state.messageBuffer
+        },
+        getDates(state) {
+            return state.dates;
         }
     },
     actions: {
@@ -132,7 +139,20 @@ export default createStore({
                     alert('服务器出错，请联系工作人员');
                     console.error('Login error: ', err);
                 });
-        }
+        },
+        async getDates({commit}) {
+            await axios.get('http://localhost:3000/api/messages/dates')
+                .then(res => {
+                    console.log(res);
+                    if (res.status === 200) {
+                        commit('setDates', res.data);
+                    }
+                })
+                .catch(err => {
+                    alert('服务器出错，请联系工作人员');
+                    console.error('Get dates error: ', err);
+                })
+        },
     },
     modules: {}
 })
