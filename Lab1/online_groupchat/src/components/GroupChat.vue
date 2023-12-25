@@ -2,12 +2,23 @@
 import {ref, onMounted, watch} from 'vue'
 import {useStore} from 'vuex'
 import {useRouter} from "vue-router";
+import {io} from 'socket.io-client';
 
 const store = useStore()
 const router = useRouter()
 const messageContent = ref('')
 const showDates = ref(false)
 const dates = ref([])
+const socket = io('http://localhost:3000')
+
+socket.on('chat message',(message)=>{
+  console.log('Received from server: ',message);
+  if(message.username === store.getters.getUsername)
+    return;
+  store.commit('addMessage', message);
+  const messages = document.getElementsByClassName("messages")[0];
+  messages.scrollTop = messages.scrollHeight;
+})
 
 onMounted(async () => {
   await store.dispatch('checkSession');
@@ -34,13 +45,14 @@ watch(
 
 const handleSend = () => {
   const dateTime = new Date();
-  let message = {
+  const message = {
     username: store.getters.getUsername,
     date: dateTime.toLocaleDateString(),
     time: dateTime.toLocaleTimeString(),
     content: messageContent.value
   }
   store.commit('addMessage', message)
+  socket.emit('chat message',message);
   messageContent.value = ''
   const messages = document.getElementsByClassName("messages")[0];
   messages.scrollTop = messages.scrollHeight;
