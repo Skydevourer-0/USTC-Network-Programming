@@ -20,7 +20,7 @@ router.post('/load-messages', (req, res) => {
 
 // 存储消息记录
 router.post('/save-messages', (req, res) => {
-    const messages = req.body;
+    const message = req.body;
     const file = path.join(__dirname, '..', 'public', 'messageList.json');
     fs.readFile(file, 'utf-8', (err, data) => {
         if (err) {
@@ -28,7 +28,7 @@ router.post('/save-messages', (req, res) => {
             return res.status(500).send('Error reading file...');
         }
         let messageList = JSON.parse(data || '[]');
-        messageList = messageList.concat(messages);
+        messageList.push(message);
         fs.writeFile(file, JSON.stringify(messageList, null, 2), err => {
             if (err) {
                 console.error(err);

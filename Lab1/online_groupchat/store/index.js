@@ -6,7 +6,6 @@ export default createStore({
         online: false,
         username: '',
         messageList: [],
-        messageBuffer: [],
         dates: []
     },
     mutations: {
@@ -21,12 +20,8 @@ export default createStore({
         setMessageList(state, messageList) {
             state.messageList = messageList
         },
-        setMessageBuffer(state, messageBuffer) {
-            state.messageBuffer = messageBuffer
-        },
         addMessage(state, message) {
             state.messageList.push(message);
-            state.messageBuffer.push(message);
         },
         setDates(state, dates) {
             state.dates = dates;
@@ -41,9 +36,6 @@ export default createStore({
         },
         getMessageList(state) {
             return state.messageList
-        },
-        getMessageBuffer(state) {
-            return state.messageBuffer
         },
         getDates(state) {
             return state.dates;
@@ -62,9 +54,9 @@ export default createStore({
                     if (err.response && err.response.status === 400) {
                         alert('用户名已存在');
                     } else {
-                        alert('服务器出错，请联系工作人员');
+                        alert('服务器出错，注册失败');
                     }
-                    console.error('Login error: ', err);
+                    console.error('Signup error: ', err);
                 })
         },
         async login({commit}, {username, password}) {
@@ -80,7 +72,7 @@ export default createStore({
                 if (err.response && err.response.status === 400) {
                     alert('用户名或密码错误');
                 } else {
-                    alert('服务器出错，请联系工作人员');
+                    alert('服务器出错，登录失败');
                 }
                 console.error('Login error: ', err);
             });
@@ -94,8 +86,8 @@ export default createStore({
                     commit('setLogout');
                 }
             }).catch(err => {
-                alert('服务器出错，请联系工作人员');
-                console.error('Login error: ', err);
+                alert('服务器出错，登出失败');
+                console.error('Logout error: ', err);
             })
         },
         async checkSession({commit}) {
@@ -110,7 +102,7 @@ export default createStore({
                 }
             })
                 .catch(err => {
-                    console.error('Login error: ', err);
+                    console.error('Check session error: ', err);
                 });
         },
         async loadMessages({commit}, date) {
@@ -122,22 +114,18 @@ export default createStore({
                     }
                 })
                 .catch(err => {
-                    alert('服务器出错，请联系工作人员');
-                    console.error('Login error: ', err);
+                    alert('服务器出错，加载信息失败');
+                    console.error('Load message error: ', err);
                 });
         },
-        async saveMessages({commit, getters}) {
-            const messages = getters.getMessageBuffer;
-            await axios.post('http://localhost:3000/api/messages/save-messages', messages)
+        async saveMessages(_, message) {
+            await axios.post('http://localhost:3000/api/messages/save-messages', {message})
                 .then(res => {
                     console.log(res);
-                    if (res.status === 200) {
-                        commit('setMessageBuffer', []);
-                    }
                 })
                 .catch(err => {
-                    alert('服务器出错，请联系工作人员');
-                    console.error('Login error: ', err);
+                    alert('服务器出错，保存信息失败');
+                    console.error('Save message error: ', err);
                 });
         },
         async getDates({commit}) {
@@ -149,7 +137,7 @@ export default createStore({
                     }
                 })
                 .catch(err => {
-                    alert('服务器出错，请联系工作人员');
+                    alert('服务器出错，加载日期失败');
                     console.error('Get dates error: ', err);
                 })
         },

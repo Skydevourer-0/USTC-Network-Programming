@@ -1,19 +1,20 @@
 <script setup>
-import {ref, onMounted, watch} from 'vue'
+import {ref, onMounted} from 'vue'
 import {useStore} from 'vuex'
 import {useRouter} from "vue-router";
 import {io} from 'socket.io-client';
 
 const store = useStore()
 const router = useRouter()
+const username = ref('')
 const messageContent = ref('')
 const showDates = ref(false)
 const dates = ref([])
 const socket = io('http://localhost:3000')
 
-socket.on('chat message',(message)=>{
-  console.log('Received from server: ',message);
-  if(message.username === store.getters.getUsername)
+socket.on('chat message', (message) => {
+  console.log('Received from server: ', message);
+  if (message.username === store.getters.getUsername)
     return;
   store.commit('addMessage', message);
   const messages = document.getElementsByClassName("messages")[0];
@@ -27,6 +28,7 @@ onMounted(async () => {
   } else {
     await store.dispatch('getDates');
     dates.value = store.getters.getDates;
+    username.value = store.getters.getUsername;
     const date = new Date().toLocaleDateString();
     await store.dispatch('loadMessages', date);
     const messages = document.getElementsByClassName("messages")[0];
@@ -34,16 +36,7 @@ onMounted(async () => {
   }
 });
 
-watch(
-    () => store.getters.getMessageBuffer.length,
-    async (length) => {
-      const threshold = 1;
-      if (length >= threshold) {
-        await store.dispatch('saveMessages');
-      }
-    });
-
-const handleSend = () => {
+const handleSend = async () => {
   const dateTime = new Date();
   const message = {
     username: store.getters.getUsername,
@@ -52,7 +45,8 @@ const handleSend = () => {
     content: messageContent.value
   }
   store.commit('addMessage', message)
-  socket.emit('chat message',message);
+  await store.dispatch('saveMessages', message);
+  socket.emit('chat message', message);
   messageContent.value = ''
   const messages = document.getElementsByClassName("messages")[0];
   messages.scrollTop = messages.scrollHeight;
@@ -107,6 +101,7 @@ const handleHistory = async (event) => {
       </div>
     </div>
     <div class="send">
+      <span class="username">{{ username }}</span>
       <form @submit.prevent="handleSend">
         <input type="text" v-model="messageContent" required/>
         <button type="submit">发送</button>
@@ -187,13 +182,18 @@ const handleHistory = async (event) => {
   border-color: #aaa;
 }
 
+.send {
+  display: flex;
+  flex-direction: row;
+  width: 90vw;
+  padding: 10px;
+}
+
 .send form {
-  margin: 10px;
   flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 90vw;
 }
 
 .send form input {
