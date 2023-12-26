@@ -119,7 +119,7 @@ export default createStore({
                 });
         },
         async saveMessages(_, message) {
-            await axios.post('http://localhost:3000/api/messages/save-messages', {message})
+            await axios.post('http://localhost:3000/api/messages/save-messages', message)
                 .then(res => {
                     console.log(res);
                 })
