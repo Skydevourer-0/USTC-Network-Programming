@@ -15,7 +15,7 @@
 
 前端应用的UML类图如下所示：
 
-![UML-前端](/Lab1/image/UML-前端.png)
+![UML-前端](/Lab1/image/UML-前端.jpg)
 
 其中，store目录下的index.js是vuex建立的store，用于管理应用中的状态；src目录下的main.js是Vue的启动文件；router.js是路由文件；App.vue是启动组件；而components下的UserLogin.vue和GroupChat.vue是登录页面组件和聊天页面组件。
 
@@ -23,7 +23,7 @@
 
 后端应用的UML类图如下所示：
 
-![UML-后端](/Lab1/image/UML-后端.png)
+![UML-后端](/Lab1/image/UML-后端.jpg)
 
 其中，routes目录下的users.js和messages.js文件使用了express.Router()创建了RESTful接口；app.js则是后端应用的启动文件，配置了cors，express-session，socket.io等。
 
